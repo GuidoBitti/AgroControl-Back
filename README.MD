@@ -1,79 +1,61 @@
-﻿# AgroControl-Back
+# Backend - Seminario Integrador
 
-Backend de AgroControl construido con Node.js, TypeScript y Prisma.
+Este proyecto corre con Node.js + Express + MikroORM. A continuación tienes una forma rápida de levantar el backend.
 
-## Resumen
+## Requisitos
 
-Este proyecto es el servidor backend de AgroControl. Usa `express` para la API y Prisma para el acceso a la base de datos.
+- Node.js 18 o superior
+- pnpm
 
-## Requisitos previos
+## 1) Instalar dependencias
 
-- Node.js 18+ instalado
-- pnpm instalado globalmente (o disponible en tu sistema)
-- PostgreSQL accesible o una base de datos compatible
-- Git para clonar el repositorio
-
-Si no tienes `pnpm`, instálalo con:
+Desde la carpeta del backend:
 
 ```bash
-npm install -g pnpm
-```
-
-## Clonar y preparar desde cero
-
-1. Clona el repositorio:
-
-```bash
-git clone https://github.com/GuidoBitti/AgroControl-Back.git && cd AgroControl-Back
-```
-
-2. Instala dependencias:
-
-```bash
+cd backend
 pnpm install
 ```
 
-3. Crea el archivo `.env`
+## 2) Configurar variables de entorno
 
-Crea un archivo `.env` en la raíz del proyecto con al menos esta variable:
+Crear un archivo `.env` dentro de `backend/` con esta estructura:
 
 ```env
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
+DB_URL=postgresql://usuario:password@localhost:5432/tu_base
+DB_NAME=tu_base
 ```
 
-4. Genera el cliente Prisma y aplica migraciones
+> Ajusta los valores según tu base de datos local o remota.
 
-Genera el cliente Prisma con:
-
-```bash
-pnpm prisma generate
-```
-
-Si todavía no hay migraciones creadas, usa:
-
-```bash
-pnpm prisma migrate dev --name init
-```
-
-Si ya tienes migraciones, aplica los cambios con:
-
-```bash
-pnpm prisma migrate dev
-```
-
-## Iniciar el proyecto
-
-Para desarrollo:
+## 3) Iniciar el backend
 
 ```bash
 pnpm dev
 ```
 
-Este comando ejecuta `tsx watch src/server.ts`.
+Esto ejecuta la app con `tsx watch src/app.ts` y levanta el servidor en:
 
-## Estructura principal
+```text
+http://localhost:3000
+```
 
-- `src/` — Código fuente TypeScript
-- `prisma/` — Esquema Prisma y migraciones
-- `package.json` — Scripts y dependencias
-- `tsconfig.json` — Configuración del compilador TypeScript
+## 4) Verificar que funciona
+
+Puedes probar la API desde el navegador o con Postman:
+
+```text
+http://localhost:3000/api/insumos
+```
+
+## 5) Detener el servidor
+
+Presiona:
+
+```bash
+Ctrl + C
+```
+
+## Notas
+
+- Si no existe el archivo `.env`, la aplicación no podrá conectarse a la base de datos.
+- El proyecto usa pnpm como gestor de paquetes, por lo que se recomienda seguir ese flujo.
