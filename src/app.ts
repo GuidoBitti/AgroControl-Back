@@ -2,8 +2,10 @@ import express, { type Express, type Request, type Response } from 'express';
 import { orm, syncSchema } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
 import { insumosRouter } from './insumo/insumo.routes.js'
+import cors from 'cors'
 
 const app = express()
+app.use(cors({origin: 'http://localhost:5173'}))
 app.use(express.json())
 
 //luego de los middlewares base
