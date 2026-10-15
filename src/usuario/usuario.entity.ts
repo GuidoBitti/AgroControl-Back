@@ -9,10 +9,10 @@ export const Usuario = defineEntity({
   properties: {
     nombre: p.string(),
     apellido: p.string(),
-    email: p.string(),
-    password: p.string(),
+    email: p.string().unique(), //para evitar dos cuentas con el mismo correo
+    password: p.string().hidden(), //el usuario no puede ver su password, solo el sistema lo puede ver
     fechaNacimiento: p.date(),
-    telefono: p.integer(),
+    telefono: p.string(),
     direccion: p.string(),
     rol: () => p.manyToOne(Rol),
     organizacion: () => p.manyToOne(Organizacion)

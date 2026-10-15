@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { json, Request, Response } from 'express'
 import { orm } from '../shared/db/orm.js'
 import { Usuario } from './usuario.entity.js'
 
@@ -17,6 +17,27 @@ export class UsuarioController {
       })
     }
   }
+
+async login(req: Request, res: Response) {
+  try {
+    const { email, password } = req.body
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Faltan datos' })
+    }
+
+    const usuario = await orm.em.findOne(Usuario, { email })
+
+    if (!usuario || usuario.password !== password) {
+      return res.status(401).json({ message: 'Credenciales incorrectas' })
+    }
+
+    return res.status(200).json(usuario)
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: 'Error al iniciar sesión' })
+  }
+}
 
   async getOne(req: Request, res: Response) {
     try {
@@ -40,21 +61,24 @@ export class UsuarioController {
     }
   }
 
-
-  async create(req: Request, res: Response) {
-    try {
-      const usuario = orm.em.create(Usuario, req.body)
-      await orm.em.flush()
-      return res.status(201).json(usuario)
-    }catch (error){
-      console.error(error)
-      return res.status(500).json({
-        message: 'Error al crear el usuario',
-      })
+async create(req: Request, res: Response) {
+  try {
+    const existe = await orm.em.findOne(Usuario, { email: req.body.email })
+    if (existe) {
+      return res.status(409).json({ message: 'El email ya está registrado' })
     }
-  }
 
-  async update(req: Request, res: Response) {
+    const usuario = orm.em.create(Usuario, req.body)
+    await orm.em.flush()
+    return res.status(201).json(usuario)
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: 'Error al crear el usuario' })
+  }
+}
+
+
+async update(req: Request, res: Response) {
     try {
       const id = Number(req.params.id)
 

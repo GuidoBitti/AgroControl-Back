@@ -7,6 +7,5 @@ export const Rol = defineEntity({
   extends: BaseEntity,
   properties: {
     descripcion: p.string(),
-    usuarios: () => p.oneToMany(Usuario).mappedBy('rol'),
   },
 })

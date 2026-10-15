@@ -10,7 +10,7 @@ export const Campania = defineEntity({
     fechaInicio: p.date(),
     fechaFin: p.date(),
     descripcion: p.string(),
-    LoteCampanias: () => p.oneToOne(LoteCampania).mappedBy('campania'),
+    LoteCampanias: () => p.oneToMany(LoteCampania).mappedBy('campania'),
     organizacion: () => p.manyToOne(Organizacion)
   },
 })
