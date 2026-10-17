@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { orm } from '../shared/db/orm.js'
 import { Lote } from './lote.entity.js'
 
+
 export class LoteController {
 
   async getAll(req: Request, res: Response) {
@@ -22,7 +23,7 @@ export class LoteController {
     try {
       const id = Number(req.params.id)
 
-      const lote = await orm.em.findOne(Lote, { id: id })
+      const lote = await orm.em.findOne(Lote, { id: id }, { populate: ['Cultivo'] })
 
       if (!lote) {
         return res.status(404).json({

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { orm } from '../shared/db/orm.js'
-import { Campania } from './campaña.entity.js'
+import { Campania } from './campania.entity.js'
 
 export class CampaniaController {
 
@@ -18,27 +18,20 @@ export class CampaniaController {
     }
   }
 
-  async getOne(req: Request, res: Response) {
-    try {
-      const id = Number(req.params.id)
-
-      const campania = await orm.em.findOne(Campania, { id: id })
-
-      if (!campania) {
-        return res.status(404).json({
-          message: 'Campaña no encontrada',
-        })
-      }
-
-      return res.status(200).json(campania)
-    } catch (error) {
-      console.error(error)
-
-      return res.status(500).json({
-        message: 'Error al obtener la campaña',
-      })
-    }
+async getOne(req: Request, res: Response) {
+  try {
+    const id = Number(req.params.id)
+    const campania = await orm.em.findOneOrFail(
+      Campania,
+      { id },
+      { populate: ['LoteCampanias', 'LoteCampanias.Lote', 'LoteCampanias.Lote.Cultivo'] },
+    )
+    return res.status(200).json(campania)
+  } catch (error) {
+    console.error(error)
+    return res.status(404).json({ message: 'Campaña no encontrada' })
   }
+}
 
 
   async create(req: Request, res: Response) {
@@ -76,6 +69,7 @@ export class CampaniaController {
       if (fechaFin !== undefined) {
         campania.fechaFin = fechaFin
       }
+      
       await orm.em.flush()
 
       return res.status(200).json(campania)
