@@ -23,6 +23,7 @@ Crear un archivo `.env` dentro de `backend/` con esta estructura:
 ```env
 DB_URL=postgresql://usuario:password@localhost:5432/tu_base
 DB_NAME=tu_base
+JWT_SECRET=secreto_jwt
 ```
 
 > Ajusta los valores según tu base de datos local o remota.

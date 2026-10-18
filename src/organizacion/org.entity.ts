@@ -8,6 +8,6 @@ export const Organizacion = defineEntity({
   properties: {
     razonSocial: p.string(),
     cuit: p.string(),
-    usuarios: () => p.oneToMany(Usuario).mappedBy('organizacion'),
+    //usuarios: () => p.oneToMany(Usuario).mappedBy('organizacion'),
   },
 })

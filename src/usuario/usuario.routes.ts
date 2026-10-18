@@ -5,7 +5,6 @@ export const usuariosRouter = Router()
 const controller = new UsuarioController()
 
 usuariosRouter.get('/', controller.getAll.bind(controller))
-usuariosRouter.get('/:id', controller.getOne.bind(controller))
 usuariosRouter.put('/:id', controller.update.bind(controller))
 usuariosRouter.post('/', controller.create.bind(controller))
 usuariosRouter.delete('/:id', controller.remove.bind(controller))
