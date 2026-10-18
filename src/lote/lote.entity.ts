@@ -1,6 +1,7 @@
 import { defineEntity, p } from '@mikro-orm/core'
 import { BaseEntity } from '../shared/db/baseEntity.entity.js'
-import { LoteCampania } from '../lote.campaña/lote.campaña.entity.js'
+import { LoteCampania } from '../lote-campania/lote-campania.entity.js'
+import { Cultivo } from '../cultivo/cultivo.entity.js'
 
 
 export const Lote = defineEntity({

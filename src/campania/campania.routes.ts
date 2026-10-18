@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { CampaniaController } from './campaña.controller.js'
+import { CampaniaController } from './campania.controller.js'
 
 export const campaniaRouter = Router()
 const controller = new CampaniaController()

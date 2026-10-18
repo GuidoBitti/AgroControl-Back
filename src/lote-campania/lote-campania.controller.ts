@@ -1,15 +1,15 @@
 import { Request, Response } from 'express'
 import { orm } from '../shared/db/orm.js'
-import { LoteCampania } from '../lote.campaña/lote.campaña.entity.js'
+import { LoteCampania } from '../lote-campania/lote-campania.entity.js'
 
 
 export class LoteCampaniaController {
 
   async getAll(req: Request, res: Response) {
     try {
-      const loteCampania = await orm.em.find(LoteCampania, {})
+      const loteCampanias = await orm.em.find(LoteCampania, {}, { populate: ['Lote', 'Campania'] })
 
-      return res.status(200).json(loteCampania)
+      return res.status(200).json(loteCampanias)
     } catch (error) {
       console.error(error)
 
