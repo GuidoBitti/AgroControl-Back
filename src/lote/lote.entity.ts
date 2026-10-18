@@ -7,8 +7,11 @@ export const Lote = defineEntity({
   name: 'Lote',
   extends: BaseEntity,
   properties: {
+    numero: p.integer(),
     tipo: p.string(),
+    latitud: p.float(),
+    longitud: p.float(),
+    hectareas: p.integer(),
     descripcion: p.string(),
-    loteCampanias: () => p.oneToMany(LoteCampania).mappedBy('lote'),
   },
 })

@@ -4,6 +4,7 @@ import { RequestContext } from '@mikro-orm/core'
 import { insumosRouter } from './insumo/insumo.routes.js'
 import {lotesRouter} from './lote/lote.routes.js'
 import {usuariosRouter} from './usuario/usuario.routes.js'
+import {rolRouter} from './rol/rol.routes.js'
 import cors from 'cors'
 
 const app = express()
@@ -18,6 +19,7 @@ app.use((req, res, next) => {
 app.use('/api/usuarios', usuariosRouter) 
 app.use('/api/insumos', insumosRouter)
 app.use('/api/lotes', lotesRouter)
+app.use('/api/rol', rolRouter)
 
 app.use((_, res) => {
   return res.status(404).send({ message: 'Resource not found' })
