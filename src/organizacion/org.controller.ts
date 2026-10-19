@@ -47,16 +47,19 @@ export class OrganizacionController {
   async create(req: Request, res: Response) {
     try {
       const body = req.body ?? {}
+      console.log(body)
       const {
         razonSocial,
         cuit,
-        nombre,
-        apellido,
-        email,
-        password,
-        fechaNacimiento,
-        telefono,
-        direccion,
+        usuario: {
+          nombre,
+          apellido,
+          email,
+          password,
+          fechaNacimiento,
+          telefono,
+          direccion,
+        },
       } = body
 
       const requiredFields = {
