@@ -48,25 +48,6 @@ Puedes probar la API desde el navegador o con Postman:
 http://localhost:3000/api/insumos
 ```
 
-## Crear una organización con su administrador
-
-Envía los datos de la organización y del administrador en un único `POST` a
-`/api/organizaciones`. El backend crea el rol `Administrador` si todavía no
-existe y guarda la organización y el usuario en una sola transacción.
-
-```json
-{
-  "razonSocial": "Agro Ejemplo",
-  "cuit": "20-12345678-9",
-  "nombre": "Ana",
-  "apellido": "Pérez",
-  "email": "ana@example.com",
-  "password": "una-clave-segura",
-  "fechaNacimiento": "1990-01-15",
-  "telefono": "1123456789",
-  "direccion": "Calle 123"
-}
-```
 
 ## 5) Detener el servidor
 
