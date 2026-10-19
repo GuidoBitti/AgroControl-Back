@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { orm } from '../shared/db/orm.js'
 import { Organizacion } from './org.entity.js'
+import { Usuario } from '../usuario/usuario.entity.js'
+import { Rol } from '../rol/rol.entity.js'
+import bcrypt from 'bcryptjs'
 
 export class OrganizacionController {
 
@@ -43,13 +46,87 @@ export class OrganizacionController {
 
   async create(req: Request, res: Response) {
     try {
-      const organizacion = orm.em.create(Organizacion, req.body)
-      await orm.em.flush()
-      return res.status(201).json(organizacion)
-    }catch (error){
+      const body = req.body ?? {}
+      const {
+        razonSocial,
+        cuit,
+        nombre,
+        apellido,
+        email,
+        password,
+        fechaNacimiento,
+        telefono,
+        direccion,
+      } = body
+
+      const requiredFields = {
+        razonSocial,
+        cuit,
+        nombre,
+        apellido,
+        email,
+        password,
+        fechaNacimiento,
+        telefono,
+        direccion,
+      }
+
+      if (Object.values(requiredFields).some(value => typeof value !== 'string' || value.trim() === '')) {
+        return res.status(400).json({
+          message: 'Todos los datos de la organización y del administrador son obligatorios',
+        })
+      }
+
+      const parsedFechaNacimiento = new Date(fechaNacimiento)
+      if (Number.isNaN(parsedFechaNacimiento.getTime())) {
+        return res.status(400).json({
+          message: 'La fecha de nacimiento no es válida',
+        })
+      }
+
+      const existingUser = await orm.em.findOne(Usuario, { email })
+      if (existingUser) {
+        return res.status(409).json({
+          message: 'El email ya está registrado',
+        })
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10)
+      const result = await orm.em.transactional(async em => {
+        const duplicateUser = await em.findOne(Usuario, { email })
+        if (duplicateUser) {
+          return null
+        }
+
+        const rol = await em.findOne(Rol, { descripcion: 'Administrador' })
+        if (!rol) throw new Error('No existe el rol Administrador')
+        const organizacion = em.create(Organizacion, { razonSocial, cuit })
+        const administrador = em.create(Usuario, {
+          nombre,
+          apellido,
+          email,
+          password: hashedPassword,
+          fechaNacimiento,
+          telefono,
+          direccion,
+          rol,
+          organizacion,
+        })
+
+        return { organizacion, administrador }
+      })
+
+      if (!result) {
+        return res.status(409).json({
+          message: 'El email ya está registrado',
+        })
+      }
+
+      return res.status(201).json(result)
+    } catch (error) {
       console.error(error)
       return res.status(500).json({
-        message: 'Error al crear la organizacion',
+        message: 'Error al crear la organización y su administrador',
       })
     }
   }

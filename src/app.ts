@@ -9,6 +9,7 @@ import {campaniaRouter} from './campania/campania.routes.js'
 import cors from 'cors'
 import { lotesCampaniasRouter } from './lote-campania/lote-campania.routes.js';
 import { trabajosRouter } from './trabajo/trabajo.routes.js';
+import { organizacionRouter } from './organizacion/org.routes.js';
 
 const app = express()
 app.use(cors({origin: 'http://localhost:5173'}))
@@ -26,6 +27,7 @@ app.use('/api/lotes', lotesRouter)
 app.use('/api/rol', rolRouter)
 app.use('/api/lote-campania', lotesCampaniasRouter )
 app.use('/api/trabajos', trabajosRouter)
+app.use('/api/organizaciones', organizacionRouter)
 
 app.use((_, res) => {
   return res.status(404).send({ message: 'Resource not found' })
