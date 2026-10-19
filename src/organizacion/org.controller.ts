@@ -84,6 +84,13 @@ export class OrganizacionController {
         })
       }
 
+      const existingOrganization = await orm.em.findOne(Organizacion, { cuit })
+      if (existingOrganization) {
+        return res.status(409).json({
+          message: 'El CUIT ya está registrado',
+        })
+      }
+
       const existingUser = await orm.em.findOne(Usuario, { email })
       if (existingUser) {
         return res.status(409).json({

@@ -7,7 +7,7 @@ export const Organizacion = defineEntity({
   extends: BaseEntity,
   properties: {
     razonSocial: p.string(),
-    cuit: p.string(),
+    cuit: p.string().unique(),
     usuarios: () => p.oneToMany(Usuario).mappedBy('organizacion'),
   },
 })
