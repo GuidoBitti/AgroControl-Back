@@ -15,6 +15,6 @@ export const Usuario = defineEntity({
     telefono: p.string(),
     direccion: p.string(),
     rol: () => p.manyToOne(Rol),
-    //organizacion: () => p.manyToOne(Organizacion)
+    organizacion: () => p.manyToOne(Organizacion)
   },
 })

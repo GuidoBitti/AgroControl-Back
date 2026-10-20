@@ -48,6 +48,7 @@ Puedes probar la API desde el navegador o con Postman:
 http://localhost:3000/api/insumos
 ```
 
+
 ## 5) Detener el servidor
 
 Presiona:
