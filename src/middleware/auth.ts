@@ -17,10 +17,12 @@ export const verifyToken = (
   const token = authHeader.split(' ')[1];
 
   try {
-    jwt.verify(
+    const playload = jwt.verify(
       token,
       process.env.JWT_SECRET!
-    );
+    ) as { id: number; email:string; organizacion: number};
+
+    req.user = playload;
 
     next();
   } catch {

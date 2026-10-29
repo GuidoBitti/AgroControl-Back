@@ -6,7 +6,10 @@ export class InsumoController {
 
   async getAll(req: Request, res: Response) {
     try {
-      const insumos = await orm.em.find(Insumo, {})
+      console.log('req.user:', req.user)
+      const insumos = await orm.em.find(Insumo, {
+        organizacion: req.user!.organizacion,
+      })
 
       return res.status(200).json(insumos)
     } catch (error) {
@@ -22,7 +25,10 @@ export class InsumoController {
     try {
       const id = Number(req.params.id)
 
-      const insumo = await orm.em.findOne(Insumo, { id: id })
+      const insumo = await orm.em.findOne(Insumo, {
+        id,
+        organizacion: req.user!.organizacion,
+       })
 
       if (!insumo) {
         return res.status(404).json({
@@ -41,76 +47,65 @@ export class InsumoController {
   }
 
 
-  async create(req: Request, res: Response) {
+    async create(req: Request, res: Response) {
     try {
-      const insumo = orm.em.create(Insumo, req.body)
+      const { nombre, stock, tipo, descripcion } = req.body
+
+      const insumo = orm.em.create(Insumo, {
+        nombre,
+        stock,
+        tipo,
+        descripcion,
+        organizacion: req.user!.organizacion, // siempre la del token
+      })
       await orm.em.flush()
       return res.status(201).json(insumo)
-    }catch (error){
+    } catch (error) {
       console.error(error)
-      return res.status(500).json({
-        message: 'Error al crear el insumo',
-      })
+      return res.status(500).json({ message: 'Error al crear el insumo' })
     }
   }
 
   async update(req: Request, res: Response) {
     try {
       const id = Number(req.params.id)
-
-      const insumo = await orm.em.findOne(Insumo, { id: id })
+      const insumo = await orm.em.findOne(Insumo, {
+        id,
+        organizacion: req.user!.organizacion,
+      })
 
       if (!insumo) {
-        return res.status(404).json({
-          message: 'Insumo no encontrado',
-        })
+        return res.status(404).json({ message: 'Insumo no encontrado' })
       }
 
-      const { stock, descripcion, tipo } = req.body
-
-      if (stock !== undefined) {
-        insumo.stock = stock
-      }
-
-      if (tipo !== undefined) {
-        insumo.tipo = tipo
-      }
-      
-      if (descripcion !== undefined) {
-        insumo.descripcion = descripcion
-      }
-
+      const { nombre, stock, tipo, descripcion } = req.body
+      orm.em.assign(insumo, { nombre, stock, tipo, descripcion })
       await orm.em.flush()
-
       return res.status(200).json(insumo)
     } catch (error) {
       console.error(error)
-
-      return res.status(500).json({
-        message: 'Error al actualizar el insumo',
-      })
+      return res.status(500).json({ message: 'Error al actualizar el insumo' })
     }
   }
 
-    async remove(req: Request, res: Response) {
-    try{
+  async remove(req: Request, res: Response) {
+    try {
       const id = Number(req.params.id)
-      const insumo = await orm.em.findOne(Insumo, { id: id })
-      if(!insumo) {
-        return res.status(404).json({
-          message: 'Insumo no encontrado',
-        })
-      }
-      await orm.em.remove(insumo)
-      await orm.em.flush()
-      return res.status(200).json({
-        message: 'Insumo eliminado',
+      const insumo = await orm.em.findOne(Insumo, {
+        id,
+        organizacion: req.user!.organizacion,
       })
+
+      if (!insumo) {
+        return res.status(404).json({ message: 'Insumo no encontrado' })
+      }
+
+      orm.em.remove(insumo)
+      await orm.em.flush()
+      return res.status(204).send()
     } catch (error) {
       console.error(error)
-      return res.status(500).json({
-        message: 'Error al eliminar el insumo',
-      })
+      return res.status(500).json({ message: 'Error al eliminar el insumo' })
     }
   }
 }
