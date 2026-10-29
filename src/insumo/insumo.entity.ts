@@ -1,5 +1,6 @@
 import { defineEntity, p } from '@mikro-orm/core'
 import { BaseEntity } from '../shared/db/baseEntity.entity.js'
+import { Organizacion } from '../organizacion/org.entity.js'
 
 export const Insumo = defineEntity({
   name: 'Insumo',
@@ -9,5 +10,6 @@ export const Insumo = defineEntity({
     stock: p.integer(),
     tipo: p.string(),
     descripcion: p.string(),
+    organizacion: () => p.manyToOne(Organizacion)
   },
 })
