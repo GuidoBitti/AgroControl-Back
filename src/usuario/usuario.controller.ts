@@ -31,6 +31,8 @@ export class UsuarioController {
         { email },
         { populate: ['rol'] }
       );
+      console.log('email recibido:', JSON.stringify(email), '| usuario encontrado:', !!usuario);
+
 
       if (!usuario) {
         return res.status(401).json({
@@ -41,6 +43,8 @@ export class UsuarioController {
         password,
         usuario.password
       );
+      console.log('password valida:', validPassword, '| largo hash:', usuario.password.length);
+
       if (!validPassword) {
         return res.status(401).json({
           message: "Credenciales inválidas"
@@ -49,7 +53,8 @@ export class UsuarioController {
       const token = jwt.sign(
         {
           id: usuario.id,
-          email: usuario.email
+          email: usuario.email,
+          organizacion : usuario.organizacion.id,
         },
         process.env.JWT_SECRET!,
         {
