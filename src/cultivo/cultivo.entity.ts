@@ -9,6 +9,6 @@ export const Cultivo = defineEntity({
     nombre: p.string(),
     tipo: p.string(),
     descripcion: p.string(),
-    LoteCampanias: () => p.oneToMany(LoteCampania).mappedBy('Cultivo'),
+    //LoteCampanias: () => p.oneToMany(LoteCampania).mappedBy('Cultivo'),
   },
 })

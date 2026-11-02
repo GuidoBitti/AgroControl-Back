@@ -7,7 +7,11 @@ export class LoteController {
 
   async getAll(req: Request, res: Response) {
     try {
-      const lotes = await orm.em.find(Lote, {})
+      const lotes = await orm.em.find(
+        Lote,
+        {},
+        { populate: ['LoteCampanias', 'LoteCampanias.Campania'] },
+      )
 
       return res.status(200).json(lotes)
     } catch (error) {
@@ -23,7 +27,11 @@ export class LoteController {
     try {
       const id = Number(req.params.id)
 
-      const lote = await orm.em.findOne(Lote, { id: id }, { populate: ['Cultivo'] })
+      const lote = await orm.em.findOne(
+        Lote,
+        { id },
+        { populate: ['LoteCampanias', 'LoteCampanias.Campania'] },
+      )
 
       if (!lote) {
         return res.status(404).json({
@@ -67,11 +75,8 @@ export class LoteController {
         })
       }
 
-      const { tipo, descripcion } = req.body
-      
-      if (tipo !== undefined) {
-        lote.tipo = tipo
-      }
+      const { descripcion } = req.body
+
       if (descripcion !== undefined) {
         lote.descripcion = descripcion
       }
