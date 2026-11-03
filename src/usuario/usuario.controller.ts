@@ -2,7 +2,6 @@ import { json, Request, Response } from 'express'
 import { orm } from '../shared/db/orm.js'
 import { Usuario } from './usuario.entity.js'
 import { Rol } from '../rol/rol.entity.js'
-import { Organizacion } from '../organizacion/org.entity.js'
 import jwt from "jsonwebtoken";
 import bcrypt from 'bcryptjs'
 

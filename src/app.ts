@@ -26,8 +26,9 @@ app.use('/api/insumos', insumosRouter)
 app.use('/api/lotes', lotesRouter)
 app.use('/api/rol', rolRouter)
 app.use('/api/lote-campania', lotesCampaniasRouter )
-app.use('/api/trabajos', trabajosRouter)
+app.use('/api/trabajo', trabajosRouter)
 app.use('/api/organizaciones', organizacionRouter)
+
 
 app.use((_, res) => {
   return res.status(404).send({ message: 'Resource not found' })
