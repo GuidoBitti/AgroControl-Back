@@ -9,7 +9,7 @@ export class LoteController {
     try {
       const lotes = await orm.em.find(
         Lote,
-        {},
+        { organizacion: req.user!.organizacion },
         { populate: ['LoteCampanias', 'LoteCampanias.Campania'] },
       )
 
@@ -29,7 +29,7 @@ export class LoteController {
 
       const lote = await orm.em.findOne(
         Lote,
-        { id },
+        { id, organizacion: req.user!.organizacion },
         { populate: ['LoteCampanias', 'LoteCampanias.Campania'] },
       )
 
@@ -52,7 +52,15 @@ export class LoteController {
 
   async create(req: Request, res: Response) {
     try {
-      const lote = orm.em.create(Lote, req.body)
+      const { numero, latitud, longitud, hectareas, descripcion } = req.body
+      const lote = orm.em.create(Lote, {
+        numero,
+        latitud,
+        longitud,
+        hectareas,
+        descripcion,
+        organizacion: req.user!.organizacion,
+      })
       await orm.em.flush()
       return res.status(201).json(lote)
     }catch (error){
@@ -67,7 +75,10 @@ export class LoteController {
     try {
       const id = Number(req.params.id)
 
-      const lote = await orm.em.findOne(Lote, { id: id })
+      const lote = await orm.em.findOne(Lote, {
+        id,
+        organizacion: req.user!.organizacion,
+      })
 
       if (!lote) {
         return res.status(404).json({
@@ -96,7 +107,10 @@ export class LoteController {
     async remove(req: Request, res: Response) {
     try{
       const id = Number(req.params.id)
-      const lote = await orm.em.findOne(Lote, { id: id })
+      const lote = await orm.em.findOne(Lote, {
+        id,
+        organizacion: req.user!.organizacion,
+      })
       if(!lote) {
         return res.status(404).json({
           message: 'lote no encontrado',
