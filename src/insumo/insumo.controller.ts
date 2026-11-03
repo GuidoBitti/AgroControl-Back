@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { orm } from '../shared/db/orm.js'
 import { Insumo } from './insumo.entity.js'
+import { TipoInsumo } from '../tipo-insumo/tipo-insumo.entity.js'
 
 export class InsumoController {
 
@@ -9,7 +10,7 @@ export class InsumoController {
       console.log('req.user:', req.user)
       const insumos = await orm.em.find(Insumo, {
         organizacion: req.user!.organizacion,
-      })
+      }, { populate: ['tipoInsumo'] })
 
       return res.status(200).json(insumos)
     } catch (error) {
@@ -28,7 +29,7 @@ export class InsumoController {
       const insumo = await orm.em.findOne(Insumo, {
         id,
         organizacion: req.user!.organizacion,
-       })
+      }, { populate: ['tipoInsumo'] })
 
       if (!insumo) {
         return res.status(404).json({
@@ -49,12 +50,25 @@ export class InsumoController {
 
     async create(req: Request, res: Response) {
     try {
-      const { nombre, stock, tipo, descripcion } = req.body
+      const { nombre, stock, tipoInsumoId, descripcion } = req.body
+      const idTipoInsumo = Number(tipoInsumoId)
+
+      if (!Number.isInteger(idTipoInsumo) || idTipoInsumo <= 0) {
+        return res.status(400).json({
+          message: 'tipoInsumoId debe ser un número entero positivo',
+        })
+      }
+
+      const tipoInsumo = await orm.em.findOne(TipoInsumo, { id: idTipoInsumo })
+
+      if (!tipoInsumo) {
+        return res.status(404).json({ message: 'Tipo de insumo no encontrado' })
+      }
 
       const insumo = orm.em.create(Insumo, {
         nombre,
         stock,
-        tipo,
+        tipoInsumo,
         descripcion,
         organizacion: req.user!.organizacion, // siempre la del token
       })
@@ -72,14 +86,34 @@ export class InsumoController {
       const insumo = await orm.em.findOne(Insumo, {
         id,
         organizacion: req.user!.organizacion,
-      })
+      }, { populate: ['tipoInsumo'] })
 
       if (!insumo) {
         return res.status(404).json({ message: 'Insumo no encontrado' })
       }
 
-      const { nombre, stock, tipo, descripcion } = req.body
-      orm.em.assign(insumo, { nombre, stock, tipo, descripcion })
+      const { nombre, stock, tipoInsumoId, descripcion } = req.body
+
+      if (tipoInsumoId !== undefined) {
+        const idTipoInsumo = Number(tipoInsumoId)
+
+        if (!Number.isInteger(idTipoInsumo) || idTipoInsumo <= 0) {
+          return res.status(400).json({
+            message: 'tipoInsumoId debe ser un número entero positivo',
+          })
+        }
+
+        const tipoInsumo = await orm.em.findOne(TipoInsumo, { id: idTipoInsumo })
+
+        if (!tipoInsumo) {
+          return res.status(404).json({ message: 'Tipo de insumo no encontrado' })
+        }
+
+        insumo.tipoInsumo = tipoInsumo
+      }
+
+      orm.em.assign(insumo, { nombre, stock, descripcion })
+
       await orm.em.flush()
       return res.status(200).json(insumo)
     } catch (error) {

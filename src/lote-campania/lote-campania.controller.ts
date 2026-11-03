@@ -9,7 +9,14 @@ export class LoteCampaniaController {
 
   async getAll(req: Request, res: Response) {
     try {
-      const loteCampanias = await orm.em.find(LoteCampania, {}, { populate: ['Lote', 'Campania'] })
+      const loteCampanias = await orm.em.find(
+        LoteCampania,
+        {
+          Lote: { organizacion: req.user!.organizacion },
+          Campania: { organizacion: req.user!.organizacion },
+        },
+        { populate: ['Lote', 'Campania'] },
+      )
 
       return res.status(200).json(loteCampanias)
     } catch (error) {
@@ -27,7 +34,11 @@ export class LoteCampaniaController {
 
       const loteCampania = await orm.em.findOne(
         LoteCampania,
-        { id },
+        {
+          id,
+          Lote: { organizacion: req.user!.organizacion },
+          Campania: { organizacion: req.user!.organizacion },
+        },
         { populate: ['Lote', 'Campania'] },
       )
 
@@ -60,8 +71,14 @@ export class LoteCampaniaController {
         })
       }
 
-      const lote = await orm.em.findOne(Lote, { id: loteId })
-      const campania = await orm.em.findOne(Campania, { id: campaniaId })
+      const lote = await orm.em.findOne(Lote, {
+        id: loteId,
+        organizacion: req.user!.organizacion,
+      })
+      const campania = await orm.em.findOne(Campania, {
+        id: campaniaId,
+        organizacion: req.user!.organizacion,
+      })
 
       if (!lote || !campania) {
         return res.status(404).json({
@@ -97,7 +114,11 @@ export class LoteCampaniaController {
 
       const loteCampania = await orm.em.findOne(
         LoteCampania,
-        { id },
+        {
+          id,
+          Lote: { organizacion: req.user!.organizacion },
+          Campania: { organizacion: req.user!.organizacion },
+        },
         { populate: ['Lote', 'Campania'] },
       )
 
@@ -116,7 +137,10 @@ export class LoteCampaniaController {
         if (!Number.isInteger(loteId)) {
           return res.status(400).json({ message: 'loteId debe ser un número entero' })
         }
-        const loteEncontrado = await orm.em.findOne(Lote, { id: loteId })
+        const loteEncontrado = await orm.em.findOne(Lote, {
+          id: loteId,
+          organizacion: req.user!.organizacion,
+        })
         if (!loteEncontrado) {
           return res.status(404).json({ message: 'Lote no encontrado' })
         }
@@ -128,7 +152,10 @@ export class LoteCampaniaController {
         if (!Number.isInteger(campaniaId)) {
           return res.status(400).json({ message: 'campaniaId debe ser un número entero' })
         }
-        const campaniaEncontrada = await orm.em.findOne(Campania, { id: campaniaId })
+        const campaniaEncontrada = await orm.em.findOne(Campania, {
+          id: campaniaId,
+          organizacion: req.user!.organizacion,
+        })
         if (!campaniaEncontrada) {
           return res.status(404).json({ message: 'Campaña no encontrada' })
         }
@@ -164,7 +191,11 @@ export class LoteCampaniaController {
     async remove(req: Request, res: Response) {
     try{
       const id = Number(req.params.id)
-      const loteCampania = await orm.em.findOne(LoteCampania, { id: id })
+      const loteCampania = await orm.em.findOne(LoteCampania, {
+        id,
+        Lote: { organizacion: req.user!.organizacion },
+        Campania: { organizacion: req.user!.organizacion },
+      })
       if(!loteCampania) {
         return res.status(404).json({
           message: 'Lote de campaña no encontrado',

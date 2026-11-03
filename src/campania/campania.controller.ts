@@ -8,7 +8,7 @@ export class CampaniaController {
     try {
       const campania = await orm.em.find(
         Campania,
-        {},
+        { organizacion: req.user!.organizacion },
         { populate: ['LoteCampanias', 'LoteCampanias.Lote'] },
       )
 
@@ -123,7 +123,10 @@ export class CampaniaController {
     try {
       const id = Number(req.params.id)
 
-      const campania = await orm.em.findOne(Campania, { id: id })
+      const campania = await orm.em.findOne(Campania, {
+        id,
+        organizacion: req.user!.organizacion,
+      })
 
       if (!campania) {
         return res.status(404).json({
@@ -156,7 +159,10 @@ export class CampaniaController {
     async remove(req: Request, res: Response) {
     try{
       const id = Number(req.params.id)
-      const campania = await orm.em.findOne(Campania, { id: id })
+      const campania = await orm.em.findOne(Campania, {
+        id,
+        organizacion: req.user!.organizacion,
+      })
       if(!campania) {
         return res.status(404).json({
           message: 'Campaña no encontrada',

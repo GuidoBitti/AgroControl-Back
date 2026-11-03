@@ -10,6 +10,7 @@ import cors from 'cors'
 import { lotesCampaniasRouter } from './lote-campania/lote-campania.routes.js';
 import { trabajosRouter } from './trabajo/trabajo.routes.js';
 import { organizacionRouter } from './organizacion/org.routes.js';
+import { tipoInsumoRouter } from './tipo-insumo/tipo-insumo.routes.js';
 
 const app = express()
 app.use(cors({origin: 'http://localhost:5173'}))
@@ -23,6 +24,7 @@ app.use((req, res, next) => {
 app.use('/api/campanias', campaniaRouter)
 app.use('/api/usuarios', usuariosRouter) 
 app.use('/api/insumos', insumosRouter)
+app.use('/api/tipos-insumo', tipoInsumoRouter)
 app.use('/api/lotes', lotesRouter)
 app.use('/api/rol', rolRouter)
 app.use('/api/lote-campania', lotesCampaniasRouter )
